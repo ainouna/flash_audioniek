@@ -35,10 +35,9 @@
  * --------------------------------------------------------------------------
  * 20210825 Audioniek       Initial version.
  * 20211115 Audioniek       Fix typos in usage.
+ * 20221228 Audioniek       Minor cleanups, no code changes.
  *
- ****************************************************************************
- *
- */
+ ****************************************************************************/
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>
@@ -50,8 +49,8 @@
 #include "oup.h"
 #include "crc32.h"
 
-#define VERSION "1.01"
-#define DATE "15.11.2021"
+#define VERSION "1.02"
+#define DATE "28.12.2022"
 
 uint32_t verbose;
 uint32_t unknown;
@@ -231,7 +230,7 @@ int32_t main(int32_t argc, char* argv[])
 //		printf("  Flags              : 0x%08x\n", header_struct.flag);
 		fclose(updFile);
 	}
-	else if (argc > 5. && strlen(argv[1]) == 2 && strncmp(argv[1], "-u", 2) == 0)
+	else if (argc > 5 && strlen(argv[1]) == 2 && strncmp(argv[1], "-u", 2) == 0)
 	{  // -u: create upd flash file
 		uint32_t i = 0;
 		uint32_t arg_type = 0;
@@ -259,27 +258,27 @@ int32_t main(int32_t argc, char* argv[])
 		// scan arguments given
 		for (i = 2; i < argc; i++)
 		{
-			if (strlen(argv[i]) == 2 && strncmp(argv[i], "-i", 2) == 0)	
+			if (strlen(argv[i]) == 2 && strncmp(argv[i], "-i", 2) == 0) // input file name
 			{
 				arg_type = 1;
 			}
-			else if (strlen(argv[i]) == 2 && strncmp(argv[i], "-o", 2) == 0)	
+			else if (strlen(argv[i]) == 2 && strncmp(argv[i], "-o", 2) == 0)  // output file name
 			{
 				arg_type = 2;
 			}
-			else if (strlen(argv[i]) == 2 && strncmp(argv[i], "-m", 2) == 0)	
+			else if (strlen(argv[i]) == 2 && strncmp(argv[i], "-m", 2) == 0)  // model code
 			{
 				arg_type = 3;
 			}
-			else if (strlen(argv[i]) == 2 && strncmp(argv[i], "-n", 2) == 0)	
+			else if (strlen(argv[i]) == 2 && strncmp(argv[i], "-n", 2) == 0)  // SW version
 			{
 				arg_type = 4;
 			}
-			else if (strlen(argv[i]) == 2 && strncmp(argv[i], "-s", 2) == 0)	
+			else if (strlen(argv[i]) == 2 && strncmp(argv[i], "-s", 2) == 0)  // flash offset
 			{
 				arg_type = 5;
 			}
-			else if (strlen(argv[i]) == 2 && strncmp(argv[i], "-v", 2) == 0)	
+			else if (strlen(argv[i]) == 2 && strncmp(argv[i], "-v", 2) == 0)
 			{
 				arg_type = 0;  // flag no parameter
 				verbose = 1;
@@ -823,8 +822,8 @@ int32_t main(int32_t argc, char* argv[])
 		printf("  -xv [file.upd]              As -x, verbose\n");
 		printf("  -u Suboptions               Create Opticum .upd flash file\n");
 		printf("     Suboptions for -u:\n");
-		printf("     -i [infile]              Input file: binary payload\n");
-		printf("     -o [outfile.upd]         Output flash file\n");
+		printf("     -i [infile]              Input file name: binary payload\n");
+		printf("     -o [outfile.upd]         Output flash file name\n");
 		printf("     -m [model_code]          Use model_code (default 07120603)\n");
 		printf("     -n [N.NN]                Use version N.NN (default 1.00)\n");
 		printf("     -s [flash offset]        Start address in flash (hexadecimal, default 0x40000)\n");
@@ -845,4 +844,3 @@ int32_t main(int32_t argc, char* argv[])
 	return 0;
 }
 // vim:ts=4
-
