@@ -178,7 +178,7 @@
 #include "dummy31.h"
 
 #define VERSION "1.9.9b"
-#define DATE "08.07.2022"
+#define DATE "02.01.2023"
 
 // Global variables
 uint8_t verbose = 1;
@@ -548,11 +548,10 @@ int32_t writeBlock(FILE *irdFile, FILE *inFile, uint8_t firstBlock, uint16_t typ
 	 * Offset   Size      CRC  Name/purpose
 	 * -------------------------------------------
 	 *   0x00   uint16_t   N   block length
-	 *   0x02   uint16_t   N   block type (0x00 - 0x0f, or 0x10 = write to EEPROM)
-	 *   0x04   uint16_t   N   data length (uncompressed length)
-	 *   0x08   uint16_t   N   CRC16 over rest of block
-	 *   0x0a   uint16_t   Y   compressed length
-	 *   0x0c-   uint8_t   Y   block data (compressed length bytes in total)
+	 *   0x02   uint16_t   N   CRC16 over rest of block
+	 *   0x04   uint16_t   Y   block type (0x00 - 0x0f, or 0x10 = write to EEPROM)
+	 *   0x06   uint16_t   Y   data length (uncompressed length)
+	 *   0x08-   uint8_t   Y   block data (compressed length bytes in total)
 	 *
 	 **********************************************************************************************/
 		cDataLen = readAndCompress(inFile, &dataBuf, 4, &ucDataLen);
