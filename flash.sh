@@ -10,7 +10,7 @@ echo "+ stick."
 echo "+"
 echo "+ Author : Audioniek, based on previous work by schishu, bpanther"
 echo "+          and others."
-echo "+ Date   : 08-09-2022"
+echo "+ Date   : 29-10-2022"
 echo "+"
 echo "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
 echo
@@ -83,6 +83,9 @@ echo
 # 20220628 Audioniek   Fix unsetting RESELLERID with Atemio AM 520 HD.
 # 20220719 Audioniek   Add Atemio AM 530 HD, titan for AM 520 HD.
 # 20220806 Audioniek   Indicate default choice differently.
+# 20220827 Audioniek   Add Homecast HS8100 series.
+# 20221029 Audioniek   Add Homecast HS9000/9100 series.
+# 20221127 Audioniek   Better handling of USB plus built-in hard disk.
 # ---------------------------------------------------------------------------
 
 # Set up some variables
@@ -238,6 +241,10 @@ if [ "$BATCH_MODE" == "yes" ]; then
   else
     export OUTTYPE="flash"
   fi
+  export ON_HDD=
+  if [ `grep -e "DESTINATION=USB_HDD" $FLASHDIR/config` ]; then
+    export ON_HDD="(with built-in hard disk)"
+  fi
   rm $FLASHDIR/config
 else
   if [ `grep -e "DESTINATION=USB" $FLASHDIR/config` ]; then
@@ -259,7 +266,7 @@ fi
 # Check if the receiver can accept an Enigma2 image in flash
 if [ "$IMAGE" == "enigma2" ] && [ "$OUTTYPE" == "flash" ] && [ ! "$BATCH_MODE" == "yes" ]; then
   case "$BOXTYPE" in
-    fs9000|hs9510|hs7110|hs7420|hs7810a|cuberevo|cuberevo_mini|cuberevo_mini2|cuberevo_250hd|cuberevo_mini_fta|cuberevo_2000hd|cuberevo_3000hd|cuberevo_9500|hl101|vip1_v1|vip1_v2|vip2|opt9600|opt9600mini|opt9600prima)
+    fs9000|hs9510|hs7110|hs7420|hs7810a|cuberevo|cuberevo_mini|cuberevo_mini2|cuberevo_250hd|cuberevo_mini_fta|cuberevo_2000hd|cuberevo_3000hd|cuberevo_9500|hl101|vip1_v1|vip1_v2|vip2|opt9600|opt9600mini|opt9600prima|hchs8100|hchs9000)
       echo
       echo "-- Message ------------------------------------------------------------"
       echo
@@ -301,7 +308,7 @@ if [ "$IMAGE" == "enigma2" ] && [ "$OUTTYPE" == "USB" -o "$OUTTYPE" == "USB_HDD"
   esac
 elif [ "$IMAGE" == "neutrino" ] && [ "$OUTTYPE" == "USB" -o "$OUTTYPE" == "USB_HDD" ]; then
   case "$BOXTYPE" in
-    hs8200|cuberevo|cuberevo_mini|cuberevo_mini2|cuberevo_250hd|cuberevo_mini_fta|fs9000|hs9510|hs7110|hs7420|hs7810a|hs7119|hs7429|hs7819|spark|spark7162|ufc960|ufs910|ufs912|ufs913|ufs922|vip1_v1|vip1_v2|vip2|opt9600|opt9600mini|opt9600prima)
+    hs8200|cuberevo|cuberevo_mini|cuberevo_mini2|cuberevo_250hd|cuberevo_mini_fta|fs9000|hs9510|hs7110|hs7420|hs7810a|hs7119|hs7429|hs7819|spark|spark7162|ufc960|ufs910|ufs912|ufs913|ufs922|vip1_v1|vip1_v2|vip2|opt9600|opt9600mini|opt9600prima|hchs8100|hchs9000)
       ;;
     *)
       echo
@@ -429,7 +436,7 @@ if [ ! "$BATCH_MODE" == "yes" ]; then
   echo "+  Linux version      : linux-sh4-2.6.32.$SUBVERS"
   echo "+  Kernel patch level : P0$PATCH"
   echo "+  Image              : $IMAGEN"
-  echo "+  Will run in/on     : $OUTTYPE"
+  echo "+  Will run in/on     : $OUTTYPE $ON_HDD"
   echo "+"
   echo "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
   echo
@@ -697,7 +704,7 @@ case $BOXTYPE in
       echo "-----------------------------------------------------------------------"
       exit 2;;
   esac
-elif [ "$OUTTYPE" == "USB" ]; then
+else #USB
   case $BOXTYPE in
     adb_box)
 #      $SCRIPTDIR/$OUTTYPE/"$BOXTYPE"_"$OUTTYPE".sh;;
@@ -718,17 +725,8 @@ elif [ "$OUTTYPE" == "USB" ]; then
       $SCRIPTDIR/$OUTTYPE/"$BOXTYPE"_"$OUTTYPE".sh;;
     opt9600|opt9600mini|opt9600prima)
       $SCRIPTDIR/$OUTTYPE/opt9600_"$OUTTYPE".sh;;
-    *)
-      echo " Sorry, there is no $OUTTYPE support for receiver $BOXTYPE available."
-      echo
-      echo " Exiting..."
-      echo "-----------------------------------------------------------------------"
-      exit 2;;
-  esac
-else # USB_HDD
-  case $BOXTYPE in
-    opt9600prima)
-      $SCRIPTDIR/USB/opt9600_USB.sh;;
+    hchs8100|hchs9000)
+      $SCRIPTDIR/$OUTTYPE/hchs8100_"$OUTTYPE".sh;;
     *)
       echo " Sorry, there is no $OUTTYPE support for receiver $BOXTYPE available."
       echo
