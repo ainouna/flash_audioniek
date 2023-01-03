@@ -17,6 +17,7 @@
 # 20220127 Audioniek   Added Opticum/Orton HD (TS) 9600 Prima.
 # 20220829 Audioniek   Added Homecast HS8100 series.
 # 20220917 Audioniek   Fix make devices (wrong boxmodel)
+# 20221029 Audioniek   Added Homecast HS9000 series.
 
 RELEASEDIR=$1
 
@@ -71,7 +72,7 @@ case $BOXTYPE in
   spark|spark7162)
     common
     ;;
-  hs8100)
+  hchs8100|hchs9000)
     common
     ;;
   ufc960|ufs910|ufs922)
